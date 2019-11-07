@@ -1,6 +1,30 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+
+class CarCategory(models.Model):
+    categoryName=(
+        ('Toyota','Toyota'),
+        ('Cross country','Cross country'),
+        ('Vox wagen','Vox wagen'),
+        ('Suzuki','Suzuki'),
+        ('Mahindra','Mahindra'),
+        ('Honda','Honda'),
+        ('Hyunda','Hyunda'),
+        ('Volvo','Volvo'),
+        ('Daihatsu','Daihatsu'),
+        
+    )
+    categoryPart=models.CharField(max_length=40,choices=categoryName)
+    categoryImage=models.ImageField(upload_to='category/')
+
+    def __str__(self):
+        return self.categoryPart
+
+
+
 
 class SpareParts(models.Model):
     nameChoose=(('Head lights','Head lights'),
@@ -29,26 +53,18 @@ class SpareParts(models.Model):
     locationPart=models.CharField(max_length=40,choices=locationChoose)
     ImagePart=models.ImageField(upload_to='spareparts/')
     Phone=models.IntegerField()
+    carCat = models.ManyToManyField(CarCategory)
+    
 
     def __str__(self):
         return self.namePart
 
 
-class CarCategory(models.Model):
-    categoryName=(
-        ('Toyota','Toyota'),
-        ('Cross country','Cross country'),
-        ('Vox wagen','Vox wagen'),
-        ('Suzuki','Suzuki'),
-        ('Mahindra','Mahindra'),
-        ('Honda','Honda'),
-        ('Hyunda','Hyunda'),
-        ('Volvo','Volvo'),
-        ('Daihatsu','Daihatsu'),
-        
-    )
-    categoryPart=models.CharField(max_length=40,choices=categoryName)
-    spareParts = models.ManyToManyField(SpareParts)
+class Cart(models.Model):
+    sparePart=models.ManyToManyField(SpareParts,null=True,blank=True)
+    total=models.IntegerField(default=0)
+    active=models.BooleanField(default=True)
+    
+    # def __str__(self):
+    #     return self.id
 
-    def __str__(self):
-        return self.categoryPart
